@@ -17,11 +17,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnNum7,SIGNAL(clicked()),this,SLOT(btnNumClicked()));
     connect(ui->btnNum8,SIGNAL(clicked()),this,SLOT(btnNumClicked()));
     connect(ui->btnNum9,SIGNAL(clicked()),this,SLOT(btnNumClicked()));
-
-    connect(ui->btnMultiple,SIGNAL(clicked()),this,SLOT(btnBinaryOperatorClicked()));
-    connect(ui->btnDivide,SIGNAL(clicked()),this,SLOT(btnBinaryOperatorClicked()));
-    connect(ui->btnMinus,SIGNAL(clicked()),this,SLOT(btnBinaryOperatorClicked()));
-    connect(ui->btnPlus,SIGNAL(clicked()),this,SLOT(btnBinaryOperatorClicked()));
 }
 
 MainWindow::~MainWindow()
@@ -31,46 +26,24 @@ MainWindow::~MainWindow()
 
 void MainWindow::btnNumClicked()
 {
-    QString digit =qobject_cast<QPushButton*>(sender())->text();
-    if(digit == "0" && operand=="0")
-        digit = "";
-    if(operand == "0" && digit!="0")
-      operand = "";
-
-    operand += digit;
-    ui->display->setText(operand);
-}
-
-void MainWindow::btnBinaryOperatorClicked()
-{
-
+    QString str =ui->display->text();
+    str += qobject_cast<QPushButton*>(sender())->text();
+    ui->display->setText(str);
 }
 
 void MainWindow::on_btnPeriod_clicked()
 {
-    if(!operand.contains(".")){
-        operand += qobject_cast<QPushButton*>(sender())->text();
-        ui->display->setText(operand);
+    QString str =ui->display->text();
+    if(!str.contains(".")){
+        str += qobject_cast<QPushButton*>(sender())->text();
+        ui->display->setText(str);
     }
 }
 
 
 void MainWindow::on_btnDel_clicked()
 {
-    operand=operand.left(operand.length() - 1);
-    ui->display->setText(operand);
+    QString str =ui->display->text();
+    str=str.left(str.length() - 1);
+    ui->display->setText(str);
 }
-
-
-void MainWindow::on_btnClear_clicked()
-{
-    operand.clear();
-    ui->display->setText(operand);
-}
-
-
-void MainWindow::on_btnEqual_clicked()
-{
-
-}
-
