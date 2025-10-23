@@ -1,32 +1,63 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include<math.h>
+#ifdef _MSC_VER
+// 微软编译器无需额外操作
+#else
+#pragma link "m"  // 用于GCC等编译器链接数学库
+#endif
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
-    connect(ui->btnNum0,SIGNAL(clicked()),this,SLOT(btnNumClicked()));
-    connect(ui->btnNum1,SIGNAL(clicked()),this,SLOT(btnNumClicked()));
-    connect(ui->btnNum2,SIGNAL(clicked()),this,SLOT(btnNumClicked()));
-    connect(ui->btnNum3,SIGNAL(clicked()),this,SLOT(btnNumClicked()));
-    connect(ui->btnNum4,SIGNAL(clicked()),this,SLOT(btnNumClicked()));
-    connect(ui->btnNum5,SIGNAL(clicked()),this,SLOT(btnNumClicked()));
-    connect(ui->btnNum6,SIGNAL(clicked()),this,SLOT(btnNumClicked()));
-    connect(ui->btnNum7,SIGNAL(clicked()),this,SLOT(btnNumClicked()));
-    connect(ui->btnNum8,SIGNAL(clicked()),this,SLOT(btnNumClicked()));
-    connect(ui->btnNum9,SIGNAL(clicked()),this,SLOT(btnNumClicked()));
+    digitBTNS={{Qt::Key_0,ui->btnNum0},
+              {Qt::Key_1,ui->btnNum1},
+              {Qt::Key_2,ui->btnNum2},
+              {Qt::Key_3,ui->btnNum3},
+              {Qt::Key_4,ui->btnNum4},
+              {Qt::Key_5,ui->btnNum5},
+              {Qt::Key_6,ui->btnNum6},
+              {Qt::Key_7,ui->btnNum7},
+              {Qt::Key_8,ui->btnNum8},
+              {Qt::Key_9,ui->btnNum9},
+    };
+    binaryOpBTNS = {
+        {Qt::Key_Plus, ui->btnPlus},
+        {Qt::Key_Minus, ui->btnMinus},
+        {Qt::Key_Asterisk, ui->btnMultiple},
+        {Qt::Key_Slash, ui->btnDivide}
+    };
 
-    connect(ui->btnMultiple,SIGNAL(clicked()),this,SLOT(btnBinaryOperatorClicked()));
-    connect(ui->btnDivide,SIGNAL(clicked()),this,SLOT(btnBinaryOperatorClicked()));
-    connect(ui->btnMinus,SIGNAL(clicked()),this,SLOT(btnBinaryOperatorClicked()));
-    connect(ui->btnPlus,SIGNAL(clicked()),this,SLOT(btnBinaryOperatorClicked()));
 
-    connect(ui->btnPercentage,SIGNAL(clicked()),this,SLOT(btnUnaryOperatorClicked()));
-    connect(ui->btnInverse,SIGNAL(clicked()),this,SLOT(btnUnaryOperatorClicked()));
-    connect(ui->btnSquare,SIGNAL(clicked()),this,SLOT(btnUnaryOperatorClicked()));
-    connect(ui->btnSqrt,SIGNAL(clicked()),this,SLOT(btnUnaryOperatorClicked()));
+    unaryOpBTNS = {
+        {Qt::Key_Percent, ui->btnPercentage},
+        {Qt::Key_AsciiCircum, ui->btnSquare},
+        {Qt::Key_S, ui->btnSqrt},
+        {Qt::Key_I, ui->btnInverse}
+    };
+
+    foreach(auto btn,digitBTNS )
+    connect(btn,SIGNAL(clicked()),this,SLOT(btnNumClicked()));
+
+    foreach (QPushButton* btn, binaryOpBTNS.values()) {
+        connect(btn, SIGNAL(clicked()), this, SLOT(btnBinaryOperatorClicked()));
+    }
+
+    foreach (QPushButton* btn, unaryOpBTNS.values()) {
+        connect(btn, SIGNAL(clicked()), this, SLOT(btnUnaryOperatorClicked()));
+    }
+    // connect(ui->btnMultiple,SIGNAL(clicked()),this,SLOT(btnBinaryOperatorClicked()));
+    // connect(ui->btnDivide,SIGNAL(clicked()),this,SLOT(btnBinaryOperatorClicked()));
+    // connect(ui->btnMinus,SIGNAL(clicked()),this,SLOT(btnBinaryOperatorClicked()));
+    // connect(ui->btnPlus,SIGNAL(clicked()),this,SLOT(btnBinaryOperatorClicked()));
+
+    // connect(ui->btnPercentage,SIGNAL(clicked()),this,SLOT(btnUnaryOperatorClicked()));
+    // connect(ui->btnInverse,SIGNAL(clicked()),this,SLOT(btnUnaryOperatorClicked()));
+    // connect(ui->btnSquare,SIGNAL(clicked()),this,SLOT(btnUnaryOperatorClicked()));
+    // connect(ui->btnSqrt,SIGNAL(clicked()),this,SLOT(btnUnaryOperatorClicked()));
 
 }
 
@@ -133,7 +164,7 @@ void MainWindow::btnUnaryOperatorClicked()
             result = 1/result;
         else if (op =="x^2")
             result *=result;
-        else if (op == "")
+        else if (op == "√")
             result =sqrt(result);
 
         ui->display->setText(QString::number(result));
@@ -151,3 +182,29 @@ void MainWindow::on_btnEqual_clicked()
     ui->display->setText(result);
 }
 
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    foreach(auto btnKey , digitBTNS.keys()){
+        if(event->key() == btnKey)
+            digitBTNS[btnKey]->animateClick();
+    }
+    foreach (auto btnKey, binaryOpBTNS.keys()) {
+        if (event->key() == btnKey) {
+            binaryOpBTNS[btnKey]->animateClick();
+            return;
+        }
+    }
+
+    foreach (auto btnKey, unaryOpBTNS.keys()) {
+        if (event->key() == btnKey) {
+            unaryOpBTNS[btnKey]->animateClick();
+            return;
+        }
+    }
+
+
+    if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
+        ui->btnEqual->animateClick();
+}
+
+}

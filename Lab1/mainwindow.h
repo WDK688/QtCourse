@@ -1,9 +1,14 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+
 #include <QMainWindow>
 #include<QLabel>
 #include<QStack>
+#include<QKeyEvent>
+#include<QMap>
+#include<QPushButton>
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -23,6 +28,9 @@ public:
     QString opcode;
     QStack<QString> operands;
     QStack<QString> opcodes;
+    QMap<int, QPushButton *>digitBTNS;
+    QMap<int, QPushButton*> binaryOpBTNS;
+    QMap<int, QPushButton*> unaryOpBTNS;
 
     QString calculation(bool *ok=NULL);
 private slots:
@@ -38,6 +46,8 @@ private slots:
     void on_btnClearAll_clicked();
 
     void on_btnEqual_clicked();
+
+    virtual void keyPressEvent(QKeyEvent *event);
 
 private:
     Ui::MainWindow *ui;
