@@ -151,7 +151,7 @@ void MainWindow::btnUnaryOperatorClicked()
             return;
         }
         unaryResult = 1.0 / operand;
-    } else if (clickedOperator == "x²") {
+    } else if (clickedOperator == "x^2") {
         unaryResult = operand * operand;
     } else if (clickedOperator == "√") {
         if (operand < 0.0) {
