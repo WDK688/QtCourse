@@ -232,7 +232,7 @@ bool MainWindow::calculate(double rightOperand, const QString &pendingOperator)
 void MainWindow::abortOperation()
 {
     reset();
-    ui->display->setText("负数无法开根");
+    ui->display->setText("负数无法开根！");
 }
 
 void MainWindow::on_btnDel_clicked()
