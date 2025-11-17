@@ -17,5 +17,6 @@
         <file>img/statusbar.png</file>
         <file>img/toolbar.png</file>
         <file>img/undo.png</file>
+        <file>img/logo.png</file>
     </qresource>
 </RCC>

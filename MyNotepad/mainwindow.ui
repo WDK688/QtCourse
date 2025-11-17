@@ -76,6 +76,8 @@
     <addaction name="separator"/>
     <addaction name="actionFind"/>
     <addaction name="actionReplace"/>
+    <addaction name="separator"/>
+    <addaction name="actionSelectAll"/>
    </widget>
    <widget class="QMenu" name="menu_O">
     <property name="title">
@@ -406,7 +408,7 @@
   </action>
   <action name="actionAbout">
    <property name="text">
-    <string>关于</string>
+    <string>关于（&amp;A）</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
