@@ -1,0 +1,28 @@
+void SearchDialog::on_btFindNext_clicked()
+{
+    QString target = ui->searchText->text();
+    QString text = pTextEdit->toPlainText();
+    QTextCursor c = pTextEdit->textCursor();
+    int index=-1;
+
+    if(ui->rbDown->isChecked()){
+        index = text.indexOf(target,c.position());
+        if(index>=0){
+            c.setPosition(index);
+            c.setPosition(index+target.length(),QTextCursor::KeepAnchor);
+
+            pTextEdit->setTextCursor(c);
+        }
+    }
+
+
+    else if(ui->rbUp->isChecked()){
+        index = text.lastIndexOf(target,c.position()-text.length()-1);
+        if(index>=0){
+            c.setPosition(index+target.length());
+            c.setPosition(index,QTextCursor::KeepAnchor);
+
+            pTextEdit->setTextCursor(c);
+        }
+    }
+}
