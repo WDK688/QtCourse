@@ -83,9 +83,13 @@
     <property name="title">
      <string>格式（&amp;O）</string>
     </property>
-    <addaction name="actionFont"/>
     <addaction name="actionShowLineNumber"/>
     <addaction name="actionLineWrap"/>
+    <addaction name="actionFont"/>
+    <addaction name="actionFontCorlor"/>
+    <addaction name="separator"/>
+    <addaction name="actionFontBackgroundColor"/>
+    <addaction name="actionEditBackgroundColor"/>
    </widget>
    <widget class="QMenu" name="menu_V">
     <property name="title">
@@ -321,6 +325,9 @@
    </property>
   </action>
   <action name="actionLineWrap">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/img/linewrap4.png</normaloff>:/img/linewrap4.png</iconset>
@@ -333,6 +340,9 @@
    </property>
   </action>
   <action name="actionShowToolbar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/img/toolbar.png</normaloff>:/img/toolbar.png</iconset>
@@ -345,6 +355,9 @@
    </property>
   </action>
   <action name="actionShowStatusBar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/img/statusbar.png</normaloff>:/img/statusbar.png</iconset>
