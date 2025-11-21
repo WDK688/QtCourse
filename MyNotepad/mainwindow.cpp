@@ -43,7 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
     else{
         ui->textEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
-        ui->actionLineWrap->setCheckable(true);
+        ui->actionLineWrap->setChecked(true);
     }
 
     ui->actionShowStatusBar->setChecked(true);
@@ -288,7 +288,7 @@ void MainWindow::on_actionLineWrap_triggered()
     }
     else{
         ui->textEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
-        ui->actionLineWrap->setCheckable(false);
+        ui->actionLineWrap->setChecked(false);
     }
 }
 
@@ -306,7 +306,7 @@ void MainWindow::on_actionShowStatusBar_triggered()
 {
     bool visible = ui->statusbar->isVisible();
     ui->statusbar->setVisible(!visible);
-    ui->actionShowStatusBar->setCheckable(!visible);
+    ui->actionShowStatusBar->setChecked(!visible);
 }
 
 
@@ -314,7 +314,7 @@ void MainWindow::on_actionShowToolbar_triggered()
 {
     bool visible = ui->toolBar->isVisible();
     ui->toolBar->setVisible(!visible);
-    ui->actionShowToolbar->setCheckable(!visible);
+    ui->actionShowToolbar->setChecked(!visible);
 }
 
 
