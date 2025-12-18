@@ -125,16 +125,16 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
-           <widget class="QRadioButton" name="rbDown">
+           <widget class="QRadioButton" name="rbUp">
             <property name="text">
-             <string>向上(&amp;U)</string>
+             <string>向下(&amp;D)</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="rbUp">
+           <widget class="QRadioButton" name="rbDown">
             <property name="text">
-             <string>向下()&amp;D</string>
+             <string>向上(&amp;U)</string>
             </property>
            </widget>
           </item>

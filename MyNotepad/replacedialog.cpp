@@ -9,7 +9,7 @@ ReplaceDialog::ReplaceDialog(QWidget *parent,QPlainTextEdit * textEdit):
     ui->setupUi(this);
     pTextEdit = textEdit;
 
-    ui->rbDown->setChecked(true);
+    ui->rbUp->setChecked(true);
 }
 
 ReplaceDialog::~ReplaceDialog()
@@ -28,7 +28,7 @@ void ReplaceDialog::on_btFindNext_clicked()
     QTextCursor c = pTextEdit->textCursor();
     int index=-1;
 
-    if(ui->rbDown->isChecked()){
+    if(ui->rbUp->isChecked()){
 
         index = text.indexOf(target,c.position(), ui->cbCaseSensetive->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive);
         if(index >= 0){
@@ -37,7 +37,7 @@ void ReplaceDialog::on_btFindNext_clicked()
 
             pTextEdit->setTextCursor(c);
         }
-    }else if(ui->rbUp->isChecked()){
+    }else if(ui->rbDown->isChecked()){
         index = text.lastIndexOf(target,c.position() - text.length() - 1, ui->cbCaseSensetive->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive);
         if(index >= 0){
             c.setPosition(index + target.length());

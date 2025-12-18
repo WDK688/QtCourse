@@ -1,13 +1,16 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include "aboutdialog.h"
-#include "searchdialog.h"
-#include "replacedialog.h"
-#include<QFileDialog>
-#include <QMessageBox>
-#include<QTextStream>
-#include<QColorDialog>
-#include<QFontDialog>
+#1236 "mainwindow.h"
+#1236 "ui_mainwindow.h"
+#1236 "aboutdialog.h"
+#1236 "searchdialog.h"
+#1236 "replacedialog.h"
+#1236<QFileDialog>
+#1236 <QMessageBox>
+#1236<QTextStream>
+#1236<QColorDialog>
+#1236<QFontDialog>
+1236
+12361236
+123612361236123612361236
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -219,141 +222,3 @@ void MainWindow::on_actionCut_triggered()
     ui->textEdit->cut();
      ui->actionPaste->setEnabled(true);
 }
-
-
-void MainWindow::on_actionCopy_triggered()
-{
-    ui->textEdit->copy();
-    ui->actionPaste->setEnabled(true);
-}
-
-
-void MainWindow::on_actionPaste_triggered()
-{
-    ui->textEdit->paste();
-}
-
-
-void MainWindow::on_actionRedo_triggered()
-{
-    ui->textEdit->redo();
-}
-
-
-void MainWindow::on_textEdit_undoAvailable(bool b)
-{
-    ui->actionUndo->setEnabled(b);
-}
-
-
-void MainWindow::on_textEdit_copyAvailable(bool b)
-{
-    ui->actionCopy->setEnabled(b);
-    ui->actionCut->setEnabled(b);
-}
-
-
-void MainWindow::on_textEdit_redoAvailable(bool b)
-{
-     ui->actionRedo->setEnabled(b);
-}
-
-
-void MainWindow::on_actionFontCorlor_triggered()
-{
-    QColor color = QColorDialog::getColor(Qt::black,this,"选择颜色");
-    if(color.isValid()){
-        ui->textEdit->setStyleSheet(QString("QPlainTextEdit{color : %1}").arg(color.name()));
-
-    }
-}
-
-
-void MainWindow::on_actionEditBackgroundColor_triggered()
-{
-    QColor color = QColorDialog::getColor(Qt::black,this,"选择颜色");
-    if(color.isValid()){
-        ui->textEdit->setStyleSheet(QString("QPlainTextEdit{background-color : %1}").arg(color.name()));
-
-    }
-}
-
-
-void MainWindow::on_actionFontBackgroundColor_triggered()
-{
-
-}
-
-
-void MainWindow::on_actionLineWrap_triggered()
-{
-    QPlainTextEdit::LineWrapMode mode = ui->textEdit->lineWrapMode();
-    if(mode == QTextEdit::NoWrap){
-        ui->textEdit->setLineWrapMode(QPlainTextEdit::WidgetWidth);
-        ui->actionLineWrap->setChecked(true);
-    }
-    else{
-        ui->textEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
-        ui->actionLineWrap->setChecked(false);
-    }
-}
-
-
-void MainWindow::on_actionFont_triggered()
-{
-    bool ok =false;
-    QFont font = QFontDialog::getFont(&ok,this);
-    if(ok)
-        ui->textEdit->setFont(font);
-}
-
-
-void MainWindow::on_actionShowStatusBar_triggered()
-{
-    bool visible = ui->statusbar->isVisible();
-    ui->statusbar->setVisible(!visible);
-    ui->actionShowStatusBar->setChecked(!visible);
-}
-
-
-void MainWindow::on_actionShowToolbar_triggered()
-{
-    bool visible = ui->toolBar->isVisible();
-    ui->toolBar->setVisible(!visible);
-    ui->actionShowToolbar->setChecked(!visible);
-}
-
-
-void MainWindow::on_actionSelectAll_triggered()
-{
-    ui->textEdit->selectAll();
-}
-
-
-void MainWindow::on_actionExit_triggered()
-{
-    if(userEditConfirmed()){
-        exit(0);
-    }
-}
-
-
-void MainWindow::on_textEdit_cursorPositionChanged()
-{
-    int col= 0;
-    int ln = 0;
-    int flg = -1;
-    int pos = ui->textEdit->textCursor().position();
-    QString text = ui->textEdit->toPlainText();
-
-    for(int i = 0; i<pos;i++){
-        if(text[i]=='\n'){
-            ln++;
-            flg=i;
-        }
-    }
-    flg++;
-    col=pos - flg;
-    statusCursorLabel.setText("Ln:"+ QString::number(ln+1)+ " Col:" +QString::number(col+1));
-}
-
