@@ -1,5 +1,5 @@
 #include "idatabase.h"
-
+#include<QUuid>
 void IDatabase::ininDatabase()
 {
     database = QSqlDatabase::addDatabase("QSQLITE");
@@ -12,6 +12,79 @@ void IDatabase::ininDatabase()
     } else {
         qDebug() << "open database is ok";
     }
+}
+
+bool IDatabase::initPatienntModel()
+{
+    patientTabModel = new QSqlTableModel(this, database);
+    patientTabModel->setTable("patient");
+    patientTabModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+
+    patientTabModel->setSort(patientTabModel->fieldIndex("name"), Qt::AscendingOrder);
+
+    if (!(patientTabModel->select())) {
+        return false;
+    }
+
+    thePatientSelection = new QItemSelectionModel(patientTabModel);
+
+    return true;
+}
+
+int IDatabase::addNewPatient()
+{
+    patientTabModel->insertRow(patientTabModel->rowCount(),QModelIndex());
+
+    QModelIndex curIndex = patientTabModel->index(patientTabModel->rowCount()-1,1);
+    int curRecNo = curIndex.row();
+    QSqlRecord curRec = patientTabModel->record(curRecNo);
+    curRec.setValue("CREATEDTIMESTAMP", QDateTime::currentDateTime().toString("yyyy-MM-dd"));
+    curRec.setValue("ID", QUuid::createUuid().toString(QUuid::WithoutBraces));
+
+    patientTabModel->setRecord(curRecNo, curRec);
+    return curIndex.row();
+}
+
+bool IDatabase::searchPatient(QString filter)
+{
+    patientTabModel->setFilter(filter);
+    return patientTabModel->select();
+}
+
+bool IDatabase::deleteCurrentPatient()
+{
+    // QModelIndex curIndex = thePatientSelection->currentIndex();
+    // patientTabModel->removeRow(curIndex.row());
+    // patientTabModel->submitAll();
+    // patientTabModel->select();
+    try {
+        QModelIndex curIndex = thePatientSelection->currentIndex();
+        // 先判断索引是否有效，避免空指针/无效索引导致崩溃
+        if (!curIndex.isValid()) {
+            return false; // 索引无效，删除失败
+        }
+        // 执行删除行操作
+        bool isRemoved = patientTabModel->removeRow(curIndex.row());
+        if (isRemoved) {
+            patientTabModel->select(); // 刷新数据
+            return true; // 删除成功
+        } else {
+            return false; // 删除失败
+        }
+    } catch (...) {
+        // 捕获异常，避免程序崩溃
+        return false;
+    }
+}
+
+bool IDatabase::submitPatientEdit()
+{
+    return patientTabModel->submitAll();
+}
+
+void IDatabase::revertPatientEdit()
+{
+    patientTabModel->revertAll();
 }
 
 QString IDatabase::userLogin(QString userName, QString password)
@@ -28,6 +101,7 @@ QString IDatabase::userLogin(QString userName, QString password)
         if (passwd == password) {
             return "loginOk";
         } else {
+            qDebug() << "wrong password";
             return "wrongPassword";
         }
     } else {

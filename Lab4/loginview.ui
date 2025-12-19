@@ -91,7 +91,11 @@
           <widget class="QLineEdit" name="inputUserName"/>
          </item>
          <item>
-          <widget class="QLineEdit" name="inputUserPassword"/>
+          <widget class="QLineEdit" name="inputUserPassword">
+           <property name="echoMode">
+            <enum>QLineEdit::EchoMode::Password</enum>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
