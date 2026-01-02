@@ -14,7 +14,7 @@ void ChatServe::incomingConnection(qintptr socketDescriptor)
         worker->deleteLater();
         return;
     }
-
+    connect(worker, &ServerWorker::logMessage,this, &ChatServe::logMessage);
     m_clients.append(worker);
     emit logMessage("新的用户连接上了");
 }
