@@ -27,7 +27,7 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralwidget;
-    QWidget *widget;
+    QGridLayout *gridLayout_2;
     QVBoxLayout *verticalLayout;
     QGroupBox *groupBox;
     QGridLayout *gridLayout;
@@ -43,13 +43,11 @@ public:
         MainWindow->resize(800, 600);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
-        widget = new QWidget(centralwidget);
-        widget->setObjectName("widget");
-        widget->setGeometry(QRect(30, 20, 481, 291));
-        verticalLayout = new QVBoxLayout(widget);
+        gridLayout_2 = new QGridLayout(centralwidget);
+        gridLayout_2->setObjectName("gridLayout_2");
+        verticalLayout = new QVBoxLayout();
         verticalLayout->setObjectName("verticalLayout");
-        verticalLayout->setContentsMargins(0, 0, 0, 0);
-        groupBox = new QGroupBox(widget);
+        groupBox = new QGroupBox(centralwidget);
         groupBox->setObjectName("groupBox");
         gridLayout = new QGridLayout(groupBox);
         gridLayout->setObjectName("gridLayout");
@@ -67,13 +65,16 @@ public:
 
         horizontalLayout->addItem(horizontalSpacer);
 
-        startStopButton = new QPushButton(widget);
+        startStopButton = new QPushButton(centralwidget);
         startStopButton->setObjectName("startStopButton");
 
         horizontalLayout->addWidget(startStopButton);
 
 
         verticalLayout->addLayout(horizontalLayout);
+
+
+        gridLayout_2->addLayout(verticalLayout, 0, 0, 1, 1);
 
         MainWindow->setCentralWidget(centralwidget);
 

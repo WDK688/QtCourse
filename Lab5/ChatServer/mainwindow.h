@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "chatserve.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -25,5 +26,7 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
+
+    ChatServe *m_chatServer;
 };
 #endif // MAINWINDOW_H
