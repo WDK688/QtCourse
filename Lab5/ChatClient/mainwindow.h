@@ -23,8 +23,10 @@ private slots:
     void on_sayButton_clicked();
 
     void on_logoutButton_clicked();
-    void messageReceived(const QString &text);
+    void messageReceived(const QString &sender,const QString &text);
     void connectToServer();
+    void jsonReceived(const QJsonObject &docObj);
+    void userJoined(const QString &user);
 
 private:
     Ui::MainWindow *ui;
