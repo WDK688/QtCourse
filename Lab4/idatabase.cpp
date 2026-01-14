@@ -42,6 +42,12 @@ int IDatabase::addNewPatient()
     curRec.setValue("ID", QUuid::createUuid().toString(QUuid::WithoutBraces));
 
     patientTabModel->setRecord(curRecNo, curRec);
+    if (!patientTabModel->submitAll()) {
+        // 输出错误信息到控制台（调试用）
+        // qDebug() << "提交失败：" << patientTabModel->lastError().text();
+    } else {
+        // qDebug() << "提交成功";
+    }
     return curIndex.row();
 }
 
@@ -57,22 +63,49 @@ bool IDatabase::deleteCurrentPatient()
     // patientTabModel->removeRow(curIndex.row());
     // patientTabModel->submitAll();
     // patientTabModel->select();
+    // try {
+    //     QModelIndex curIndex = thePatientSelection->currentIndex();
+    //     // 先判断索引是否有效，避免空指针/无效索引导致崩溃
+    //     if (!curIndex.isValid()) {
+    //         return false; // 索引无效，删除失败
+    //     }
+    //     // 执行删除行操作
+    //     bool isRemoved = patientTabModel->removeRow(curIndex.row());
+    //     if (isRemoved) {
+    //         patientTabModel->select(); // 刷新数据
+    //         return true; // 删除成功
+    //     } else {
+    //         return false; // 删除失败
+    //     }
+    // } catch (...) {
+    //     // 捕获异常，避免程序崩溃
+    //     return false;
+    // }
     try {
         QModelIndex curIndex = thePatientSelection->currentIndex();
-        // 先判断索引是否有效，避免空指针/无效索引导致崩溃
         if (!curIndex.isValid()) {
-            return false; // 索引无效，删除失败
+            return false;
         }
-        // 执行删除行操作
+
+        // 1. 移除模型中的行（内存中标记删除）
         bool isRemoved = patientTabModel->removeRow(curIndex.row());
-        if (isRemoved) {
-            patientTabModel->select(); // 刷新数据
-            return true; // 删除成功
-        } else {
-            return false; // 删除失败
+        if (!isRemoved) {
+            return false;
         }
+
+        // 2. 提交操作到数据库（关键步骤：将删除写入数据库）
+        bool isSubmitted = patientTabModel->submitAll();
+        if (!isSubmitted) {
+            // 提交失败时回滚，恢复模型中的行
+            patientTabModel->revertAll();
+            return false;
+        }
+
+        // 3. 刷新模型数据，同步数据库最新状态
+        patientTabModel->select();
+        return true;
+
     } catch (...) {
-        // 捕获异常，避免程序崩溃
         return false;
     }
 }
