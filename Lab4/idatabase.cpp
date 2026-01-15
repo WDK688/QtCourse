@@ -149,3 +149,26 @@ IDatabase::IDatabase(QObject *parent)
 {
     ininDatabase();
 }
+
+bool IDatabase::initDepartmentModel()
+{
+    departmentTabModel = new QSqlTableModel(this, database);
+    departmentTabModel->setTable("department");
+    departmentTabModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    departmentTabModel->setSort(departmentTabModel->fieldIndex("dept_name"), Qt::AscendingOrder);
+
+    if (!(departmentTabModel->select())) {
+        return false;
+    }
+
+    theDepartmentSelection = new QItemSelectionModel(departmentTabModel);
+    return true;
+}
+int IDatabase::addNewDepartment() { return 0; }
+bool IDatabase::searchDepartment(QString filter) {
+    departmentTabModel->setFilter(filter);
+    return departmentTabModel->select();
+}
+bool IDatabase::deleteCurrentDepartment() { return true; }
+bool IDatabase::submitDepartmentEdit() { return departmentTabModel->submitAll(); }
+void IDatabase::revertDepartmentEdit() { departmentTabModel->revertAll(); }

@@ -39,6 +39,18 @@ public:
     QSqlTableModel *patientTabModel;
     QItemSelectionModel *thePatientSelection;
 
+
+    // 在IDatabase类中的public部分添加：
+    // 科室管理模型
+    bool initDepartmentModel();
+    int addNewDepartment();
+    bool searchDepartment(QString filter);
+    bool deleteCurrentDepartment();
+    bool submitDepartmentEdit();
+    void revertDepartmentEdit();
+    QSqlTableModel *departmentTabModel;
+    QItemSelectionModel *theDepartmentSelection;
 };
+
 
 #endif // IDATABASE_H
