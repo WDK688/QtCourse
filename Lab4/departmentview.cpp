@@ -12,3 +12,27 @@ DepartmentView::~DepartmentView()
 {
     delete ui;
 }
+
+void DepartmentView::on_btSearch_clicked()
+{
+
+}
+
+
+void DepartmentView::on_btAdd_clicked()
+{
+
+}
+
+
+void DepartmentView::on_btDelete_clicked()
+{
+
+}
+
+
+void DepartmentView::on_btEdit_clicked()
+{
+
+}
+
