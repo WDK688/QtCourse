@@ -4,19 +4,27 @@
 #include <QWidget>
 
 namespace Ui {
-class medicineeditview;
+class MedicineEditView;
 }
 
-class medicineeditview : public QWidget
+class MedicineEditView : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit medicineeditview(QWidget *parent = nullptr);
-    ~medicineeditview();
+    explicit MedicineEditView(QWidget *parent = nullptr, int rowNo = -1);
+    ~MedicineEditView();
+
+private slots:
+    void on_btSave_clicked();
+    void on_btCancel_clicked();
+
+signals:
+    void goPreviousView();
 
 private:
-    Ui::medicineeditview *ui;
+    Ui::MedicineEditView *ui;
+    int currentRowNo;
 };
 
 #endif // MEDICINEEDITVIEW_H

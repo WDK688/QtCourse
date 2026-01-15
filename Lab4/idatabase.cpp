@@ -249,3 +249,78 @@ void IDatabase::revertDoctorEdit()
 {
     doctorTabModel->revertAll();
 }
+
+bool IDatabase::initMedicineModel()
+{
+    medicineTabModel = new QSqlTableModel(this, database);
+    medicineTabModel->setTable("MEDICINE");
+    medicineTabModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    medicineTabModel->setSort(medicineTabModel->fieldIndex("NAME"), Qt::AscendingOrder);
+
+    if (!(medicineTabModel->select())) {
+        return false;
+    }
+
+    theMedicineSelection = new QItemSelectionModel(medicineTabModel);
+    return true;
+}
+
+int IDatabase::addNewMedicine()
+{
+    medicineTabModel->insertRow(medicineTabModel->rowCount(), QModelIndex());
+
+    QModelIndex curIndex = medicineTabModel->index(medicineTabModel->rowCount()-1, 1);
+    int curRecNo = curIndex.row();
+    QSqlRecord curRec = medicineTabModel->record(curRecNo);
+    curRec.setValue("ID", QUuid::createUuid().toString(QUuid::WithoutBraces));
+    curRec.setValue("CREATEDTIMESTAMP", QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss"));
+
+    medicineTabModel->setRecord(curRecNo, curRec);
+    if (!medicineTabModel->submitAll()) {
+        qDebug() << "药品提交失败：" << medicineTabModel->lastError().text();
+    }
+    return curIndex.row();
+}
+
+bool IDatabase::searchMedicine(QString filter)
+{
+    medicineTabModel->setFilter(filter);
+    return medicineTabModel->select();
+}
+
+bool IDatabase::deleteCurrentMedicine()
+{
+    try {
+        QModelIndex curIndex = theMedicineSelection->currentIndex();
+        if (!curIndex.isValid()) {
+            return false;
+        }
+
+        bool isRemoved = medicineTabModel->removeRow(curIndex.row());
+        if (!isRemoved) {
+            return false;
+        }
+
+        bool isSubmitted = medicineTabModel->submitAll();
+        if (!isSubmitted) {
+            medicineTabModel->revertAll();
+            return false;
+        }
+
+        medicineTabModel->select();
+        return true;
+
+    } catch (...) {
+        return false;
+    }
+}
+
+bool IDatabase::submitMedicineEdit()
+{
+    return medicineTabModel->submitAll();
+}
+
+void IDatabase::revertMedicineEdit()
+{
+    medicineTabModel->revertAll();
+}

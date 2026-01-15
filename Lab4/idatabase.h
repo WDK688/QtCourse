@@ -60,6 +60,17 @@ public:
     void revertDoctorEdit();
     QSqlTableModel *doctorTabModel;
     QItemSelectionModel *theDoctorSelection;
+
+    // 药品管理模型
+    bool initMedicineModel();
+    int addNewMedicine();
+    bool searchMedicine(QString filter);
+    bool deleteCurrentMedicine();
+    bool submitMedicineEdit();
+    void revertMedicineEdit();
+    bool syncMedicineData();
+    QSqlTableModel *medicineTabModel;
+    QItemSelectionModel *theMedicineSelection;
 };
 
 

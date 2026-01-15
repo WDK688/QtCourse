@@ -32,3 +32,9 @@ void WelcomeView::on_btnPatient_clicked()
     emit goPatientView();
 }
 
+
+void WelcomeView::on_btnMedicine_clicked()
+{
+    emit goMedicineView();
+}
+
