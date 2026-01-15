@@ -50,6 +50,16 @@ public:
     void revertDepartmentEdit();
     QSqlTableModel *departmentTabModel;
     QItemSelectionModel *theDepartmentSelection;
+
+
+    bool initDoctorModel();
+    int addNewDoctor();
+    bool searchDoctor(QString filter);
+    bool deleteCurrentDoctor();
+    bool submitDoctorEdit();
+    void revertDoctorEdit();
+    QSqlTableModel *doctorTabModel;
+    QItemSelectionModel *theDoctorSelection;
 };
 
 

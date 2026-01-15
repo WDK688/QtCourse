@@ -155,7 +155,7 @@ bool IDatabase::initDepartmentModel()
     departmentTabModel = new QSqlTableModel(this, database);
     departmentTabModel->setTable("department");
     departmentTabModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    departmentTabModel->setSort(departmentTabModel->fieldIndex("dept_name"), Qt::AscendingOrder);
+    departmentTabModel->setSort(departmentTabModel->fieldIndex("name"), Qt::AscendingOrder);
 
     if (!(departmentTabModel->select())) {
         return false;
@@ -176,3 +176,19 @@ bool IDatabase::searchDepartment(QString filter) {
 bool IDatabase::deleteCurrentDepartment() { return true; }
 bool IDatabase::submitDepartmentEdit() { return departmentTabModel->submitAll(); }
 void IDatabase::revertDepartmentEdit() { departmentTabModel->revertAll(); }
+bool IDatabase::initDoctorModel()
+{
+    doctorTabModel = new QSqlTableModel(this, database);
+    doctorTabModel->setTable("doctor");
+    doctorTabModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+
+    doctorTabModel->setSort(doctorTabModel->fieldIndex("name"), Qt::AscendingOrder);
+
+    if (!(doctorTabModel->select())) {
+        return false;
+    }
+
+    theDoctorSelection = new QItemSelectionModel(doctorTabModel);
+
+    return true;
+}
