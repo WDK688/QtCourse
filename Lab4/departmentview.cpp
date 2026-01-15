@@ -1,6 +1,7 @@
 #include "departmentview.h"
 #include "ui_departmentview.h"
 #include "idatabase.h"
+#include <QMessageBox>
 
 DepartmentView::DepartmentView(QWidget *parent)
     : QWidget(parent)
@@ -24,9 +25,13 @@ DepartmentView::DepartmentView(QWidget *parent)
 
         // 设置列宽
         ui->tableView->setColumnWidth(0, 80);   // dept_id
-        ui->tableView->setColumnWidth(1, 150);  // dept_name
-        ui->tableView->setColumnWidth(2, 200);  // dept_desc
+        ui->tableView->setColumnWidth(1, 100);  // dept_name
     }
+    // 连接信号槽
+    connect(ui->btAdd, &QPushButton::clicked, this, &DepartmentView::on_btAdd_clicked);
+    connect(ui->btSearch, &QPushButton::clicked, this, &DepartmentView::on_btSearch_clicked);
+    connect(ui->btDelete, &QPushButton::clicked, this, &DepartmentView::on_btDelete_clicked);
+    connect(ui->btEdit, &QPushButton::clicked, this, &DepartmentView::on_btEdit_clicked);
 }
 
 DepartmentView::~DepartmentView()
@@ -37,18 +42,19 @@ DepartmentView::~DepartmentView()
 
 void DepartmentView::on_btSearch_clicked()
 {
-
+    QString filter = QString("name like '%%1%'").arg(ui->tstSearch->text());
+    IDatabase::getInstance().searchDepartment(filter);
 }
 
 
 void DepartmentView::on_btAdd_clicked()
 {
-
 }
 
 
 void DepartmentView::on_btDelete_clicked()
 {
+    QModelIndex curIndex = IDatabase::getInstance().theDepartmentSelection->currentIndex();
 
 }
 
