@@ -324,3 +324,157 @@ void IDatabase::revertMedicineEdit()
 {
     medicineTabModel->revertAll();
 }
+bool IDatabase::initPrescriptionModel()
+{
+    prescriptionTabModel = new QSqlTableModel(this, database);
+    prescriptionTabModel->setTable("PRESCRIPTION");
+    prescriptionTabModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    prescriptionTabModel->setSort(prescriptionTabModel->fieldIndex("ID"), Qt::AscendingOrder);
+
+    // 设置字段显示名称
+    prescriptionTabModel->setHeaderData(1, Qt::Horizontal, "患者ID");
+    prescriptionTabModel->setHeaderData(2, Qt::Horizontal, "医生ID");
+    prescriptionTabModel->setHeaderData(3, Qt::Horizontal, "药品ID");
+    prescriptionTabModel->setHeaderData(4, Qt::Horizontal, "数量");
+    prescriptionTabModel->setHeaderData(5, Qt::Horizontal, "用法用量");
+    prescriptionTabModel->setHeaderData(6, Qt::Horizontal, "创建时间");
+
+    if (!(prescriptionTabModel->select())) {
+        return false;
+    }
+
+    thePrescriptionSelection = new QItemSelectionModel(prescriptionTabModel);
+    return true;
+}
+
+int IDatabase::addNewPrescription()
+{
+    prescriptionTabModel->insertRow(prescriptionTabModel->rowCount(), QModelIndex());
+
+    QModelIndex curIndex = prescriptionTabModel->index(prescriptionTabModel->rowCount()-1, 1);
+    int curRecNo = curIndex.row();
+    QSqlRecord curRec = prescriptionTabModel->record(curRecNo);
+    curRec.setValue("ID", QUuid::createUuid().toString(QUuid::WithoutBraces));
+    curRec.setValue("CREATEDTIMESTAMP", QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss"));
+
+    prescriptionTabModel->setRecord(curRecNo, curRec);
+    if (!prescriptionTabModel->submitAll()) {
+        qDebug() << "处方提交失败：" << prescriptionTabModel->lastError().text();
+    }
+    return curIndex.row();
+}
+
+bool IDatabase::searchPrescription(QString filter)
+{
+    prescriptionTabModel->setFilter(filter);
+    return prescriptionTabModel->select();
+}
+
+bool IDatabase::deleteCurrentPrescription()
+{
+    try {
+        QModelIndex curIndex = thePrescriptionSelection->currentIndex();
+        if (!curIndex.isValid()) {
+            return false;
+        }
+
+        bool isRemoved = prescriptionTabModel->removeRow(curIndex.row());
+        if (!isRemoved) {
+            return false;
+        }
+
+        bool isSubmitted = prescriptionTabModel->submitAll();
+        if (!isSubmitted) {
+            prescriptionTabModel->revertAll();
+            return false;
+        }
+
+        prescriptionTabModel->select();
+        return true;
+
+    } catch (...) {
+        return false;
+    }
+}
+
+bool IDatabase::submitPrescriptionEdit()
+{
+    return prescriptionTabModel->submitAll();
+}
+
+void IDatabase::revertPrescriptionEdit()
+{
+    prescriptionTabModel->revertAll();
+}
+
+QStringList IDatabase::getAllPatientNames()
+{
+    QStringList names;
+    QSqlQuery query(database);
+    query.prepare("SELECT NAME FROM patient");
+    if (query.exec()) {
+        while (query.next()) {
+            names << query.value(0).toString();
+        }
+    }
+    return names;
+}
+
+QStringList IDatabase::getAllDoctorNames()
+{
+    QStringList names;
+    QSqlQuery query(database);
+    query.prepare("SELECT NAME FROM doctor");
+    if (query.exec()) {
+        while (query.next()) {
+            names << query.value(0).toString();
+        }
+    }
+    return names;
+}
+
+QStringList IDatabase::getAllMedicineNames()
+{
+    QStringList names;
+    QSqlQuery query(database);
+    query.prepare("SELECT NAME FROM MEDICINE");
+    if (query.exec()) {
+        while (query.next()) {
+            names << query.value(0).toString();
+        }
+    }
+    return names;
+}
+
+QString IDatabase::getPatientIdByName(QString name)
+{
+    QSqlQuery query(database);
+    query.prepare("SELECT ID FROM patient WHERE NAME = :NAME");
+    query.bindValue(":NAME", name);
+    if (query.exec() && query.first()) {
+        return query.value(0).toString();
+    }
+    return "";
+}
+
+QString IDatabase::getDoctorIdByName(QString name)
+{
+    QSqlQuery query(database);
+    query.prepare("SELECT ID FROM doctor WHERE NAME = :NAME");
+    query.bindValue(":NAME", name);
+    if (query.exec() && query.first()) {
+        return query.value(0).toString();
+    }
+    return "";
+}
+
+QString IDatabase::getMedicineIdByName(QString name)
+{
+    QSqlQuery query(database);
+    query.prepare("SELECT ID FROM MEDICINE WHERE NAME = :NAME");
+    query.bindValue(":NAME", name);
+    if (query.exec() && query.first()) {
+        return query.value(0).toString();
+    }
+    return "";
+}

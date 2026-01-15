@@ -38,3 +38,8 @@ void WelcomeView::on_btnMedicine_clicked()
     emit goMedicineView();
 }
 
+void WelcomeView::on_btnPrescription_clicked()
+{
+    emit goPrescriptionView();
+}
+

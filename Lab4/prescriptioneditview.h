@@ -4,19 +4,27 @@
 #include <QWidget>
 
 namespace Ui {
-class prescriptioneditview;
+class PrescriptionEditView;
 }
 
-class prescriptioneditview : public QWidget
+class PrescriptionEditView : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit prescriptioneditview(QWidget *parent = nullptr);
-    ~prescriptioneditview();
+    explicit PrescriptionEditView(QWidget *parent = nullptr, int rowNo = -1);
+    ~PrescriptionEditView();
+
+private slots:
+    void on_btSave_clicked();
+    void on_btCancel_clicked();
+
+signals:
+    void goPreviousView();
 
 private:
-    Ui::prescriptioneditview *ui;
+    Ui::PrescriptionEditView *ui;
+    int currentRowNo;
 };
 
 #endif // PRESCRIPTIONEDITVIEW_H

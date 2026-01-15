@@ -71,6 +71,21 @@ public:
     bool syncMedicineData();
     QSqlTableModel *medicineTabModel;
     QItemSelectionModel *theMedicineSelection;
+
+    bool initPrescriptionModel();
+    int addNewPrescription();
+    bool searchPrescription(QString filter);
+    bool deleteCurrentPrescription();
+    bool submitPrescriptionEdit();
+    void revertPrescriptionEdit();
+    QSqlTableModel *prescriptionTabModel;
+    QItemSelectionModel *thePrescriptionSelection;
+    QStringList getAllPatientNames();
+    QStringList getAllDoctorNames();
+    QStringList getAllMedicineNames();
+    QString getPatientIdByName(QString name);
+    QString getDoctorIdByName(QString name);
+    QString getMedicineIdByName(QString name);
 };
 
 
