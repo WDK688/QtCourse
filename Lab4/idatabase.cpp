@@ -1,4 +1,5 @@
 #include "idatabase.h"
+
 #include<QUuid>
 void IDatabase::ininDatabase()
 {
@@ -477,4 +478,166 @@ QString IDatabase::getMedicineIdByName(QString name)
         return query.value(0).toString();
     }
     return "";
+}
+
+bool IDatabase::initAppointmentModel()
+{
+    // 首先检查表是否存在，如果不存在则创建
+    QSqlQuery query(database);
+    if (!database.tables().contains("APPOINTMENT")) {
+        QString createTableSql = R"(
+            CREATE TABLE APPOINTMENT (
+                ID VARCHAR(36) PRIMARY KEY,
+                PATIENT_ID VARCHAR(36) NOT NULL,
+                DOCTOR_ID VARCHAR(36) NOT NULL,
+                APPOINTMENT_TIME DATETIME NOT NULL,
+                STATUS VARCHAR(20) DEFAULT '待审核',
+                AUDIT_COMMENT VARCHAR(200),
+                AUDIT_TIME DATETIME,
+                CREATEDTIMESTAMP DATETIME,
+                SYNC_FLAG INTEGER DEFAULT 0
+            )
+        )";
+        if (!query.exec(createTableSql)) {
+            qDebug() << "创建预约表失败：" << query.lastError().text();
+            return false;
+        }
+        qDebug() << "预约表创建成功";
+    }
+
+    appointmentTabModel = new QSqlTableModel(this, database);
+    appointmentTabModel->setTable("APPOINTMENT");
+    appointmentTabModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    appointmentTabModel->setSort(appointmentTabModel->fieldIndex("APPOINTMENT_TIME"), Qt::AscendingOrder);
+
+    // 设置字段显示名称
+    appointmentTabModel->setHeaderData(appointmentTabModel->fieldIndex("ID"), Qt::Horizontal, "预约ID");
+    appointmentTabModel->setHeaderData(appointmentTabModel->fieldIndex("PATIENT_ID"), Qt::Horizontal, "患者ID");
+    appointmentTabModel->setHeaderData(appointmentTabModel->fieldIndex("DOCTOR_ID"), Qt::Horizontal, "医生ID");
+    appointmentTabModel->setHeaderData(appointmentTabModel->fieldIndex("APPOINTMENT_TIME"), Qt::Horizontal, "预约时间");
+    appointmentTabModel->setHeaderData(appointmentTabModel->fieldIndex("STATUS"), Qt::Horizontal, "状态");
+    appointmentTabModel->setHeaderData(appointmentTabModel->fieldIndex("AUDIT_COMMENT"), Qt::Horizontal, "审核意见");
+    appointmentTabModel->setHeaderData(appointmentTabModel->fieldIndex("CREATEDTIMESTAMP"), Qt::Horizontal, "创建时间");
+
+    if (!(appointmentTabModel->select())) {
+        return false;
+    }
+
+    theAppointmentSelection = new QItemSelectionModel(appointmentTabModel);
+    return true;
+}
+
+int IDatabase::addNewAppointment()
+{
+    appointmentTabModel->insertRow(appointmentTabModel->rowCount(), QModelIndex());
+
+    QModelIndex curIndex = appointmentTabModel->index(appointmentTabModel->rowCount()-1, 1);
+    int curRecNo = curIndex.row();
+    QSqlRecord curRec = appointmentTabModel->record(curRecNo);
+    curRec.setValue("ID", QUuid::createUuid().toString(QUuid::WithoutBraces));
+    curRec.setValue("CREATEDTIMESTAMP", QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss"));
+    curRec.setValue("STATUS", "待审核");
+
+    appointmentTabModel->setRecord(curRecNo, curRec);
+    if (!appointmentTabModel->submitAll()) {
+        qDebug() << "预约提交失败：" << appointmentTabModel->lastError().text();
+    }
+    return curIndex.row();
+}
+
+bool IDatabase::searchAppointment(QString filter)
+{
+    appointmentTabModel->setFilter(filter);
+    return appointmentTabModel->select();
+}
+
+bool IDatabase::deleteCurrentAppointment()
+{
+    try {
+        QModelIndex curIndex = theAppointmentSelection->currentIndex();
+        if (!curIndex.isValid()) {
+            return false;
+        }
+
+        bool isRemoved = appointmentTabModel->removeRow(curIndex.row());
+        if (!isRemoved) {
+            return false;
+        }
+
+        bool isSubmitted = appointmentTabModel->submitAll();
+        if (!isSubmitted) {
+            appointmentTabModel->revertAll();
+            return false;
+        }
+
+        appointmentTabModel->select();
+        return true;
+
+    } catch (...) {
+        return false;
+    }
+}
+
+bool IDatabase::submitAppointmentEdit()
+{
+    return appointmentTabModel->submitAll();
+}
+
+void IDatabase::revertAppointmentEdit()
+{
+    appointmentTabModel->revertAll();
+}
+
+bool IDatabase::checkTimeConflict(QString doctorId, QString appointmentTime, QString excludeId)
+{
+    QSqlQuery query(database);
+    QString sql = "SELECT ID FROM APPOINTMENT WHERE DOCTOR_ID = :DOCTOR_ID "
+                  "AND STATUS != '已拒绝' "
+                  "AND APPOINTMENT_TIME = :APPOINTMENT_TIME";
+
+    if (!excludeId.isEmpty()) {
+        sql += " AND ID != :EXCLUDE_ID";
+    }
+
+    query.prepare(sql);
+    query.bindValue(":DOCTOR_ID", doctorId);
+    query.bindValue(":APPOINTMENT_TIME", appointmentTime);
+
+    if (!excludeId.isEmpty()) {
+        query.bindValue(":EXCLUDE_ID", excludeId);
+    }
+
+    if (query.exec() && query.next()) {
+        // 找到冲突的预约
+        return true;
+    }
+    return false;
+}
+
+bool IDatabase::approveAppointment(int rowNo)
+{
+    if (rowNo < 0 || rowNo >= appointmentTabModel->rowCount()) {
+        return false;
+    }
+
+    QSqlRecord record = appointmentTabModel->record(rowNo);
+    record.setValue("STATUS", "已通过");
+    record.setValue("AUDIT_TIME", QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss"));
+    appointmentTabModel->setRecord(rowNo, record);
+
+    return appointmentTabModel->submitAll();
+}
+
+bool IDatabase::rejectAppointment(int rowNo)
+{
+    if (rowNo < 0 || rowNo >= appointmentTabModel->rowCount()) {
+        return false;
+    }
+
+    QSqlRecord record = appointmentTabModel->record(rowNo);
+    record.setValue("STATUS", "已拒绝");
+    record.setValue("AUDIT_TIME", QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss"));
+    appointmentTabModel->setRecord(rowNo, record);
+
+    return appointmentTabModel->submitAll();
 }

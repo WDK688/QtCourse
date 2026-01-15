@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AppointmentEditView</class>
+ <widget class="QWidget" name="AppointmentEditView">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>350</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>编辑预约信息</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="labelID">
+       <property name="text">
+        <string>预约ID：</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="dbEditID"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="labelPatient">
+       <property name="text">
+        <string>患者：</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="cbPatient"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="labelDoctor">
+       <property name="text">
+        <string>医生：</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QComboBox" name="cbDoctor"/>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="labelTime">
+       <property name="text">
+        <string>预约时间：</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QDateTimeEdit" name="dbDateTimeEdit"/>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="labelStatus">
+       <property name="text">
+        <string>状态：</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QComboBox" name="dbComboStatus"/>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="labelAuditComment">
+       <property name="text">
+        <string>审核意见：</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QLineEdit" name="dbEditAuditComment"/>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="labelCreatedTime">
+       <property name="text">
+        <string>创建时间：</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QLineEdit" name="dbEditCreatedTime" />
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btSave">
+       <property name="text">
+        <string>保存</string>
+       </property>
+       <property name="icon">
+        <iconset resource="lab4.qrc">
+         <normaloff>:/img/new.png</normaloff>:/img/new.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btCancel">
+       <property name="text">
+        <string>取消</string>
+       </property>
+       <property name="icon">
+        <iconset resource="lab4.qrc">
+         <normaloff>:/img/delete.png</normaloff>:/img/delete.png</iconset>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="lab4.qrc"/>
+ </resources>
+ <connections/>
+</ui>

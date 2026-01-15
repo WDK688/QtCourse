@@ -2,6 +2,7 @@
 #define WELCOMEVIEW_H
 
 #include <QWidget>
+#include <QPushButton>
 
 namespace Ui {
 class WelcomeView;
@@ -25,6 +26,8 @@ private slots:
     void on_btnPrescription_clicked();
     void on_pushButton_2_clicked();
 
+    void on_btnAppointment_clicked();
+
 signals:
     void goDepartmentView();
     void goDoctorView();
@@ -32,6 +35,7 @@ signals:
     void goMedicineView();
 
     void goPrescriptionView();
+    void goAppointmentView();
 private:
     Ui::WelcomeView *ui;
 };

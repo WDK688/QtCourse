@@ -86,6 +86,20 @@ public:
     QString getPatientIdByName(QString name);
     QString getDoctorIdByName(QString name);
     QString getMedicineIdByName(QString name);
+
+    // 预约管理模型
+    bool initAppointmentModel();
+    int addNewAppointment();
+    bool searchAppointment(QString filter);
+    bool deleteCurrentAppointment();
+    bool submitAppointmentEdit();
+    void revertAppointmentEdit();
+    bool checkTimeConflict(QString doctorId, QString appointmentTime, QString excludeId = "");
+    bool approveAppointment(int rowNo);
+    bool rejectAppointment(int rowNo);
+    QSqlTableModel *appointmentTabModel;
+    QItemSelectionModel *theAppointmentSelection;
+
 };
 
 

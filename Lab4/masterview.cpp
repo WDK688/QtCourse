@@ -30,7 +30,8 @@ void MasterView::goLoginView()
     loginView = new LoginView(this);
     pushWidgetToStackView(loginView);
 
-    connect(loginView, SIGNAL(loginSuccess()),this,SLOT(goWelcomeView()));
+    // 使用Qt 5/6新式连接语法
+    connect(loginView, &LoginView::loginSuccess, this, &MasterView::goWelcomeView);
 }
 
 void MasterView::goWelcomeView()
@@ -39,11 +40,13 @@ void MasterView::goWelcomeView()
     welcomeView = new WelcomeView(this);
     pushWidgetToStackView(welcomeView);
 
-    connect(welcomeView, SIGNAL(goDoctorView()),this,SLOT(goDoctorView()));
-    connect(welcomeView, SIGNAL(goDepartmentView()),this,SLOT(goDepartmentView()));
-    connect(welcomeView, SIGNAL(goPatientView()),this,SLOT(goPatientView()));
-    connect(welcomeView, SIGNAL(goMedicineView()), this, SLOT(goMedicineView()));
-    connect(welcomeView, SIGNAL(goPrescriptionView()),this,SLOT(goPrescriptionView()));
+    // 使用Qt 5/6新式连接语法
+    connect(welcomeView, &WelcomeView::goDoctorView, this, &MasterView::goDoctorView);
+    connect(welcomeView, &WelcomeView::goDepartmentView, this, &MasterView::goDepartmentView);
+    connect(welcomeView, &WelcomeView::goPatientView, this, &MasterView::goPatientView);
+    connect(welcomeView, &WelcomeView::goMedicineView, this, &MasterView::goMedicineView);
+    connect(welcomeView, &WelcomeView::goPrescriptionView, this, &MasterView::goPrescriptionView);
+    connect(welcomeView, &WelcomeView::goAppointmentView, this, &MasterView::goAppointmentView);
 }
 
 void MasterView::goDoctorView()
@@ -51,7 +54,7 @@ void MasterView::goDoctorView()
     qDebug() << "goDoctorView";
     doctorView = new DoctorView(this);
     pushWidgetToStackView(doctorView);
-    connect(doctorView, SIGNAL(goDoctorEditView(int)),this,SLOT(goDoctorEditView(int)));
+    connect(doctorView, &DoctorView::goDoctorEditView, this, &MasterView::goDoctorEditView);
 }
 
 void MasterView::goDepartmentView()
@@ -59,7 +62,7 @@ void MasterView::goDepartmentView()
     qDebug() << "goDepartmentView";
     departmentView = new DepartmentView(this);
     pushWidgetToStackView(departmentView);
-    connect(departmentView, SIGNAL(goDepartmentEditView(int)), this, SLOT(goDepartmentEditView(int)));
+    connect(departmentView, &DepartmentView::goDepartmentEditView, this, &MasterView::goDepartmentEditView);
 }
 
 void MasterView::goPatientView()
@@ -68,7 +71,7 @@ void MasterView::goPatientView()
     patientView = new PatientView(this);
     pushWidgetToStackView(patientView);
 
-    connect(patientView, SIGNAL(goPatientEditView(int)),this,SLOT(goPatientEditView(int)));
+    connect(patientView, &PatientView::goPatientEditView, this, &MasterView::goPatientEditView);
 }
 
 void MasterView::goPatientEditView(int rowNo)
@@ -77,7 +80,7 @@ void MasterView::goPatientEditView(int rowNo)
     patientEditView = new PatientEditView(this,rowNo);
     pushWidgetToStackView(patientEditView);
 
-    connect(patientEditView, SIGNAL(goPreviousView()),this,SLOT(goPreviousView()));
+    connect(patientEditView, &PatientEditView::goPreviousView, this, &MasterView::goPreviousView);
 }
 
 void MasterView::goPrescriptionView()
@@ -86,28 +89,42 @@ void MasterView::goPrescriptionView()
     prescriptionView = new PrescriptionView(this);
     pushWidgetToStackView(prescriptionView);
 
-    connect(prescriptionView, SIGNAL(goPrescriptionEditView(int)),this,SLOT(goPrescriptionEditView(int)));
+    connect(prescriptionView, &PrescriptionView::goPrescriptionEditView, this, &MasterView::goPrescriptionEditView);
 }
 void MasterView::goPrescriptionEditView(int rowNo)
 {
     prescriptionEditView = new PrescriptionEditView(this, rowNo);
     pushWidgetToStackView(prescriptionEditView);
-    connect(prescriptionEditView, SIGNAL(goPreviousView()),this, SLOT(goPreviousView()));
+    connect(prescriptionEditView, &PrescriptionEditView::goPreviousView, this, &MasterView::goPreviousView);
 }
 
+void MasterView::goAppointmentView()
+{
+    qDebug() << "goAppointmentView";
+    appointmentView = new AppointmentView(this);
+    pushWidgetToStackView(appointmentView);
 
+    connect(appointmentView, &AppointmentView::goAppointmentEditView, this, &MasterView::goAppointmentEditView);
+}
+
+void MasterView::goAppointmentEditView(int rowNo)
+{
+    appointmentEditView = new AppointmentEditView(this, rowNo);
+    pushWidgetToStackView(appointmentEditView);
+    connect(appointmentEditView, &AppointmentEditView::goPreviousView, this, &MasterView::goPreviousView);
+}
 void MasterView::goDoctorEditView(int rowNo)
 {
     doctorEditView = new DoctorEditView(this, rowNo);
     pushWidgetToStackView(doctorEditView);
 
-    connect(doctorEditView, SIGNAL(goPreviousView()),this,SLOT(goPreviousView()));
+    connect(doctorEditView, &DoctorEditView::goPreviousView, this, &MasterView::goPreviousView);
 }
 void MasterView::goDepartmentEditView(int rowNo)
 {
     departmentEditView = new DepartmentEditView(this, rowNo);
     pushWidgetToStackView(departmentEditView);
-    connect(departmentEditView, SIGNAL(goPreviousView()),this, SLOT(goPreviousView()));
+    connect(departmentEditView, &DepartmentEditView::goPreviousView, this, &MasterView::goPreviousView);
 }
 
 void MasterView::goMedicineView()
@@ -116,13 +133,13 @@ void MasterView::goMedicineView()
     medicineView = new MedicineView(this);
     pushWidgetToStackView(medicineView);
 
-    connect(medicineView, SIGNAL(goMedicineEditView(int)),this,SLOT(goMedicineEditView(int)));
+    connect(medicineView, &MedicineView::goMedicineEditView, this, &MasterView::goMedicineEditView);
 }
 void MasterView::goMedicineEditView(int rowNo)
 {
     medicineEditView = new MedicineEditView(this, rowNo);
     pushWidgetToStackView(medicineEditView);
-    connect(medicineEditView, SIGNAL(goPreviousView()),this, SLOT(goPreviousView()));
+    connect(medicineEditView, &MedicineEditView::goPreviousView, this, &MasterView::goPreviousView);
 }
 
 void MasterView::goPreviousView()
