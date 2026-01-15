@@ -192,3 +192,60 @@ bool IDatabase::initDoctorModel()
 
     return true;
 }
+int IDatabase::addNewDoctor()
+{
+    doctorTabModel->insertRow(doctorTabModel->rowCount(), QModelIndex());
+
+    QModelIndex curIndex = doctorTabModel->index(doctorTabModel->rowCount()-1, 1);
+    int curRecNo = curIndex.row();
+    QSqlRecord curRec = doctorTabModel->record(curRecNo);
+
+    doctorTabModel->setRecord(curRecNo, curRec);
+    if (!doctorTabModel->submitAll()) {
+        qDebug() << "医生提交失败：" << doctorTabModel->lastError().text();
+    }
+    return curIndex.row();
+}
+
+bool IDatabase::searchDoctor(QString filter)
+{
+    doctorTabModel->setFilter(filter);
+    return doctorTabModel->select();
+}
+
+bool IDatabase::deleteCurrentDoctor()
+{
+    try {
+        QModelIndex curIndex = theDoctorSelection->currentIndex();
+        if (!curIndex.isValid()) {
+            return false;
+        }
+
+        bool isRemoved = doctorTabModel->removeRow(curIndex.row());
+        if (!isRemoved) {
+            return false;
+        }
+
+        bool isSubmitted = doctorTabModel->submitAll();
+        if (!isSubmitted) {
+            doctorTabModel->revertAll();
+            return false;
+        }
+
+        doctorTabModel->select();
+        return true;
+
+    } catch (...) {
+        return false;
+    }
+}
+
+bool IDatabase::submitDoctorEdit()
+{
+    return doctorTabModel->submitAll();
+}
+
+void IDatabase::revertDoctorEdit()
+{
+    doctorTabModel->revertAll();
+}

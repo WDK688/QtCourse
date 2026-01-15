@@ -48,6 +48,7 @@ void MasterView::goDoctorView()
     qDebug() << "goDoctorView";
     doctorView = new DoctorView(this);
     pushWidgetToStackView(doctorView);
+    connect(doctorView, SIGNAL(goDoctorEditView(int)),this,SLOT(goDoctorEditView(int)));
 }
 
 void MasterView::goDepartmentView()
@@ -76,6 +77,14 @@ void MasterView::goPatientEditView(int rowNo)
     connect(patientEditView, SIGNAL(goPreviousView()),this,SLOT(goPreviousView()));
 }
 
+
+void MasterView::goDoctorEditView(int rowNo)
+{
+    doctorEditView = new DoctorEditView(this, rowNo);
+    pushWidgetToStackView(doctorEditView);
+
+    connect(doctorEditView, SIGNAL(goPreviousView()),this,SLOT(goPreviousView()));
+}
 void MasterView::goDepartmentEditView(int rowNo)
 {
     departmentEditView = new DepartmentEditView(this, rowNo);
@@ -110,7 +119,7 @@ void MasterView::on_btBack_clicked()
 }
 
 
-void MasterView::on_stackedWidget_currentChanged(int arg1)
+void MasterView::on_stackedWidget_currentChanged(int arg)
 {
     int count = ui->stackedWidget->count();
     if(count>1)

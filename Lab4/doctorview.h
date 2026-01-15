@@ -23,7 +23,8 @@ private slots:
     void on_btDelete_clicked();
 
     void on_btEdit_clicked();
-
+signals:
+    void goDoctorEditView(int idx);
 private:
     Ui::DoctorView *ui;
 };
