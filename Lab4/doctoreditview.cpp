@@ -27,7 +27,6 @@ DoctorEditView::DoctorEditView(QWidget *parent, int index)
     // 建立控件与数据库字段的映射关系
     dataMapper->addMapping(ui->dbEditDoctorId, tabModel->fieldIndex("id"));
     dataMapper->addMapping(ui->dbEditName, tabModel->fieldIndex("name"));
-    dataMapper->addMapping(ui->dbComboGender, tabModel->fieldIndex("gender"));
     dataMapper->addMapping(ui->dbComboDept, tabModel->fieldIndex("DEPARTMENT_ID"));
     dataMapper->addMapping(ui->dbEditTitle, tabModel->fieldIndex("EMPLOYEENO"));
 

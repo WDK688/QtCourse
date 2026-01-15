@@ -25,9 +25,8 @@ DoctorView::DoctorView(QWidget *parent)
         // 设置表格列宽度
         ui->tableView->setColumnWidth(0, 80);   // doctor_id
         ui->tableView->setColumnWidth(1, 80);   // name
-        ui->tableView->setColumnWidth(2, 60);   // gender
-        ui->tableView->setColumnWidth(3, 100);  // dept_id
-        ui->tableView->setColumnWidth(4, 100);  // title
+        ui->tableView->setColumnWidth(2, 100);  // dept_id
+        ui->tableView->setColumnWidth(3, 100);  // title
     }
 
     // 连接信号槽
