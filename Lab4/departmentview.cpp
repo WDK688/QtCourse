@@ -49,6 +49,9 @@ void DepartmentView::on_btSearch_clicked()
 
 void DepartmentView::on_btAdd_clicked()
 {
+    int currow = IDatabase::getInstance().addNewDepartment();
+    ui->tableView->selectRow(currow);
+    emit goDepartmentEditView(currow);
 }
 
 
@@ -61,6 +64,7 @@ void DepartmentView::on_btDelete_clicked()
 
 void DepartmentView::on_btEdit_clicked()
 {
-
+    QModelIndex curIndex = IDatabase::getInstance().theDepartmentSelection->currentIndex();
+    emit goDepartmentEditView(curIndex.row());
 }
 

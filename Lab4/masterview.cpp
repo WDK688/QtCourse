@@ -2,6 +2,8 @@
 #include "ui_masterview.h"
 #include<QDebug>
 #include"idatabase.h"
+#include "departmenteditview.h"
+
 MasterView::MasterView(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MasterView)
@@ -53,6 +55,7 @@ void MasterView::goDepartmentView()
     qDebug() << "goDepartmentView";
     departmentView = new DepartmentView(this);
     pushWidgetToStackView(departmentView);
+    connect(departmentView, SIGNAL(goDepartmentEditView(int)), this, SLOT(goDepartmentEditView(int)));
 }
 
 void MasterView::goPatientView()
@@ -73,6 +76,12 @@ void MasterView::goPatientEditView(int rowNo)
     connect(patientEditView, SIGNAL(goPreviousView()),this,SLOT(goPreviousView()));
 }
 
+void MasterView::goDepartmentEditView(int rowNo)
+{
+    departmentEditView = new DepartmentEditView(this, rowNo);
+    pushWidgetToStackView(departmentEditView);
+    connect(departmentEditView, SIGNAL(goPreviousView()),this, SLOT(goPreviousView()));
+}
 void MasterView::goPreviousView()
 {
     int count = ui ->stackedWidget->count();

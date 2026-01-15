@@ -14,7 +14,8 @@ class DepartmentView : public QWidget
 public:
     explicit DepartmentView(QWidget *parent = nullptr);
     ~DepartmentView();
-
+signals:
+    void goDepartmentEditView(int idx);
 private slots:
     void on_btSearch_clicked();
 

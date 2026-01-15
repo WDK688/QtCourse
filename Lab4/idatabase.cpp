@@ -164,7 +164,11 @@ bool IDatabase::initDepartmentModel()
     theDepartmentSelection = new QItemSelectionModel(departmentTabModel);
     return true;
 }
-int IDatabase::addNewDepartment() { return 0; }
+int IDatabase::addNewDepartment()
+{
+    departmentTabModel->insertRow(departmentTabModel->rowCount(), QModelIndex());
+    return departmentTabModel->rowCount() - 1;
+}
 bool IDatabase::searchDepartment(QString filter) {
     departmentTabModel->setFilter(filter);
     return departmentTabModel->select();
