@@ -14,11 +14,11 @@ DepartmentEditView::DepartmentEditView(QWidget *parent, int index)
     dataMapper = new QDataWidgetMapper(this);
     QSqlTableModel *tabModel = IDatabase::getInstance().departmentTabModel;
     dataMapper->setModel(tabModel);
-    dataMapper->setSubmitPolicy(QDataWidgetMapper::AutoSubmit);
 
+    dataMapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
     // 建立控件与数据库字段的映射关系
-    dataMapper->addMapping(ui->dbEditDeptId, tabModel->fieldIndex("id"));
-    dataMapper->addMapping(ui->dbEditDeptName, tabModel->fieldIndex("name"));
+    dataMapper->addMapping(ui->dbEditDeptId, tabModel->fieldIndex("ID"));
+    dataMapper->addMapping(ui->dbEditDeptName, tabModel->fieldIndex("NAME"));
 
 
     // 设置当前编辑的行
@@ -36,8 +36,14 @@ DepartmentEditView::~DepartmentEditView()
 
 void DepartmentEditView::on_btSave_clicked()
 {
-    IDatabase::getInstance().submitDepartmentEdit();
-    emit goPreviousView();
+    // 先让 DataMapper 提交所有挂起的更改到模型
+    if (dataMapper->submit()) {
+        // 然后将模型的更改提交到数据库
+        IDatabase::getInstance().submitDepartmentEdit();
+        emit goPreviousView();
+    } else {
+        //qDebug() << "DataMapper submit failed: " << dataMapper->model()->lastError().text();
+    }
 }
 
 void DepartmentEditView::on_btCancel_clicked()

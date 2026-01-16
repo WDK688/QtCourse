@@ -20,7 +20,6 @@ private slots:
     void on_btSearch_clicked();
     void on_btDelete_clicked();
     void on_btEdit_clicked();
-    void on_btSync_clicked();
 
 signals:
     void goMedicineEditView(int idx);

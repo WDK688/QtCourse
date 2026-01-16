@@ -24,7 +24,7 @@ private slots:
     void on_btnPatient_clicked();
     void on_btnMedicine_clicked();
     void on_btnPrescription_clicked();
-    void on_pushButton_2_clicked();
+
 
     void on_btnAppointment_clicked();
 

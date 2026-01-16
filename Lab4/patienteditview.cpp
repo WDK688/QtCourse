@@ -15,7 +15,7 @@ PatientEditView::PatientEditView(QWidget *parent,int index)
     // 设置数据映射器的模型
     dataMapper->setModel(IDatabase::getInstance().patientTabModel);
     // 设置提交策略为自动提交
-    dataMapper->setSubmitPolicy(QDataWidgetMapper::AutoSubmit);
+    dataMapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
 
     // 建立控件与数据库表字段的映射关系
     dataMapper->addMapping(ui->dbEditID, tabModel->fieldIndex("ID"));
@@ -40,10 +40,16 @@ PatientEditView::~PatientEditView()
 
 void PatientEditView::on_pushButton_clicked()
 {
-    IDatabase::getInstance().submitPatientEdit();
-    emit goPreviousView();
+    // 先让 DataMapper 提交所有挂起的更改到模型
+    if (dataMapper->submit()) {
+        // 然后将模型的更改提交到数据库
+        IDatabase::getInstance().submitPatientEdit();
+        emit goPreviousView();
+    } else {
+        // 如果 DataMapper 提交失败，显示错误信息
+       // qDebug() << "DataMapper submit failed: " << dataMapper->model()->lastError().text();
+    }
 }
-
 
 void PatientEditView::on_pushButton_2_clicked()
 {

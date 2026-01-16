@@ -2,6 +2,7 @@
 #define PRESCRIPTIONEDITVIEW_H
 
 #include <QWidget>
+#include <QDataWidgetMapper>
 
 namespace Ui {
 class PrescriptionEditView;
@@ -24,7 +25,8 @@ signals:
 
 private:
     Ui::PrescriptionEditView *ui;
-    int currentRowNo;
+    QDataWidgetMapper *dataMapper;
+    int currentIndex;
 };
 
 #endif // PRESCRIPTIONEDITVIEW_H

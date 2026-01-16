@@ -1,10 +1,117 @@
+// #ifndef IDATABASE_H
+// #define IDATABASE_H
+
+// #include <QObject>
+// #include <QtSql>
+// #include <QSqlDatabase>
+// #include<QDataWidgetMapper>
+// class IDatabase : public QObject
+// {
+//     Q_OBJECT
+
+// public:
+
+//     static IDatabase &getInstance()
+//     {
+//         static IDatabase instance;
+//         return instance;
+//     }
+//     QString userLogin(QString userName, QString password);
+
+// private:
+//     explicit IDatabase(QObject *parent = nullptr);
+
+//     IDatabase(IDatabase const &) = delete;
+//     void operator=(IDatabase const &) = delete;
+
+//     QSqlDatabase database;
+//     void ininDatabase();
+
+// signals:
+
+// public:
+//     bool initPatienntModel();
+//     int addNewPatient();
+//     bool searchPatient(QString filter);
+//     bool deleteCurrentPatient();
+//     bool submitPatientEdit();
+//     void revertPatientEdit();
+//     QSqlTableModel *patientTabModel;
+//     QItemSelectionModel *thePatientSelection;
+
+
+//     // 在IDatabase类中的public部分添加：
+//     // 科室管理模型
+//     bool initDepartmentModel();
+//     int addNewDepartment();
+//     bool searchDepartment(QString filter);
+//     bool deleteCurrentDepartment();
+//     bool submitDepartmentEdit();
+//     void revertDepartmentEdit();
+//     QSqlTableModel *departmentTabModel;
+//     QItemSelectionModel *theDepartmentSelection;
+
+
+//     bool initDoctorModel();
+//     int addNewDoctor();
+//     bool searchDoctor(QString filter);
+//     bool deleteCurrentDoctor();
+//     bool submitDoctorEdit();
+//     void revertDoctorEdit();
+//     QSqlTableModel *doctorTabModel;
+//     QItemSelectionModel *theDoctorSelection;
+
+//     // 药品管理模型
+//     bool initMedicineModel();
+//     int addNewMedicine();
+//     bool searchMedicine(QString filter);
+//     bool deleteCurrentMedicine();
+//     bool submitMedicineEdit();
+//     void revertMedicineEdit();
+//     bool syncMedicineData();
+//     QSqlTableModel *medicineTabModel;
+//     QItemSelectionModel *theMedicineSelection;
+
+//     bool initPrescriptionModel();
+//     int addNewPrescription();
+//     bool searchPrescription(QString filter);
+//     bool deleteCurrentPrescription();
+//     bool submitPrescriptionEdit();
+//     void revertPrescriptionEdit();
+//     QSqlTableModel *prescriptionTabModel;
+//     QItemSelectionModel *thePrescriptionSelection;
+//     QStringList getAllPatientNames();
+//     QStringList getAllDoctorNames();
+//     QStringList getAllMedicineNames();
+//     QString getPatientIdByName(QString name);
+//     QString getDoctorIdByName(QString name);
+//     QString getMedicineIdByName(QString name);
+
+//     // 预约管理模型
+//     bool initAppointmentModel();
+//     int addNewAppointment();
+//     bool searchAppointment(QString filter);
+//     bool deleteCurrentAppointment();
+//     bool submitAppointmentEdit();
+//     void revertAppointmentEdit();
+//     bool checkTimeConflict(QString doctorId, QString appointmentTime, QString excludeId = "");
+//     bool approveAppointment(int rowNo);
+//     bool rejectAppointment(int rowNo);
+//     QSqlTableModel *appointmentTabModel;
+//     QItemSelectionModel *theAppointmentSelection;
+
+// };
+
+
+// #endif // IDATABASE_H
 #ifndef IDATABASE_H
 #define IDATABASE_H
 
 #include <QObject>
 #include <QtSql>
 #include <QSqlDatabase>
-#include<QDataWidgetMapper>
+#include <QDataWidgetMapper>
+#include <QMap>
 class IDatabase : public QObject
 {
     Q_OBJECT
@@ -86,6 +193,9 @@ public:
     QString getPatientIdByName(QString name);
     QString getDoctorIdByName(QString name);
     QString getMedicineIdByName(QString name);
+    QMap<QString, QString> getPatientNameIdMap();
+    QMap<QString, QString> getDoctorNameIdMap();
+    QMap<QString, QString> getMedicineNameIdMap();
 
     // 预约管理模型
     bool initAppointmentModel();

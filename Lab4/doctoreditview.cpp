@@ -22,11 +22,11 @@ DoctorEditView::DoctorEditView(QWidget *parent, int index)
     dataMapper = new QDataWidgetMapper(this);
     QSqlTableModel *tabModel = iDatabase.doctorTabModel;
     dataMapper->setModel(tabModel);
-    dataMapper->setSubmitPolicy(QDataWidgetMapper::AutoSubmit);
+    dataMapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
 
     // 建立控件与数据库字段的映射关系
-    dataMapper->addMapping(ui->dbEditDoctorId, tabModel->fieldIndex("id"));
-    dataMapper->addMapping(ui->dbEditName, tabModel->fieldIndex("name"));
+    dataMapper->addMapping(ui->dbEditDoctorId, tabModel->fieldIndex("ID"));
+    dataMapper->addMapping(ui->dbEditName, tabModel->fieldIndex("NAME"));
     dataMapper->addMapping(ui->dbComboDept, tabModel->fieldIndex("DEPARTMENT_ID"));
     dataMapper->addMapping(ui->dbEditTitle, tabModel->fieldIndex("EMPLOYEENO"));
 
@@ -46,9 +46,14 @@ DoctorEditView::~DoctorEditView()
 
 void DoctorEditView::on_btSave_clicked()
 {
-    // 保存当前编辑
-    IDatabase::getInstance().submitDoctorEdit();
-    emit goPreviousView();
+    // 先让 DataMapper 提交所有挂起的更改到模型
+    if (dataMapper->submit()) {
+        // 然后将模型的更改提交到数据库
+        IDatabase::getInstance().submitDoctorEdit();
+        emit goPreviousView();
+    } else {
+        //qDebug() << "DataMapper submit failed: " << dataMapper->model()->lastError().text();
+    }
 }
 
 void DoctorEditView::on_btCancel_clicked()

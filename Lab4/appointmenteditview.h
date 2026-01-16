@@ -2,8 +2,6 @@
 #define APPOINTMENTEDITVIEW_H
 
 #include <QWidget>
-#include <QPushButton>
-#include <QComboBox>
 #include <QDataWidgetMapper>
 
 namespace Ui {
@@ -15,24 +13,20 @@ class AppointmentEditView : public QWidget
     Q_OBJECT
 
 public:
-    explicit AppointmentEditView(QWidget *parent = nullptr, int index = 0);
+    explicit AppointmentEditView(QWidget *parent = nullptr, int rowNo = -1);
     ~AppointmentEditView();
 
 private slots:
     void on_btSave_clicked();
     void on_btCancel_clicked();
-    void on_cbPatient_currentIndexChanged(int index);
-    void on_cbDoctor_currentIndexChanged(int index);
+
+signals:
+    void goPreviousView();
 
 private:
     Ui::AppointmentEditView *ui;
     QDataWidgetMapper *dataMapper;
-    int currentIndex;  // ← 新增的成员变量
-    void loadPatientNames();
-    void loadDoctorNames();
-
-signals:
-    void goPreviousView();
+    int currentIndex;
 };
 
 #endif // APPOINTMENTEDITVIEW_H
