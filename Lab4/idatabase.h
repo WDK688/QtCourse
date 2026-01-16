@@ -210,6 +210,9 @@ public:
     QSqlTableModel *appointmentTabModel;
     QItemSelectionModel *theAppointmentSelection;
 
+    // 获取数据库对象的公有方法
+    QSqlDatabase getDatabase() { return database; }
+
 };
 
 
